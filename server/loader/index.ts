@@ -1,10 +1,10 @@
 import { Express } from 'express';
 import expressLoader from './express';
-import dotNetLoader from './dotnet';
+import mongooseLoader from './mongooes';
 
 const appLoader = (app: Express) => {
   expressLoader(app);
-  dotNetLoader(app);
+  mongooseLoader(app);
 
   return app;
 };

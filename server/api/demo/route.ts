@@ -1,7 +1,9 @@
 import express from 'express';
 import demoController from './controller';
+import demoValidater from './validater';
 
 const demoRoute = express.Router();
-demoRoute.use('/demo', demoController.getDemoPage);
+demoRoute.get('/', demoController.getDemoPage);
+demoRoute.post('/', demoValidater.validateCreateDemo, demoController.postDemoPage);
 
 export default demoRoute;

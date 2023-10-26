@@ -1,7 +1,9 @@
+import dotenv from 'dotenv';
 import express, { Express } from 'express';
 import appLoader from './loader';
 
 const app: Express = express();
+dotenv.config();
 
 appLoader(app);
 
