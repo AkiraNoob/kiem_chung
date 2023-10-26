@@ -13,7 +13,6 @@
     "build": "npx tsc",
     "start": "node dist/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "prepare": "husky install",
     "build-types": "tsc"
   },
   "keywords": [],

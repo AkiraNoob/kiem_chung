@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky install",
-    "eslint": "cd ./server; npx eslint --fix; cd ../client; npx eslint --fix",
-    "build-types": "cd ./server; npm run build-types; cd ../client; npm run build-types",
-    "*.json": "cd ./server; prettier --write; cd ../client; prettier --write"
+    "postinstall": "(cd client && npm install) && (cd ../server && npm install)",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
