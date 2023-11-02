@@ -1,4 +1,5 @@
 import { Express } from 'express';
+import mongoSanitize from 'express-mongo-sanitize';
 import mongoose from 'mongoose';
 
 const mongooseLoader = async (app: Express) => {
@@ -8,6 +9,7 @@ const mongooseLoader = async (app: Express) => {
   try {
     if (MONGODB_CONNECT_STRING && MONGODB_PASSWORD)
       await mongoose.connect(MONGODB_CONNECT_STRING.replace('<password>', MONGODB_PASSWORD));
+    app.use(mongoSanitize());
     console.log('Connected MongoDB successfully');
   } catch (error) {
     console.error(error);

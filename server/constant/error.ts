@@ -1,21 +1,13 @@
-import { EHttpStatus } from '../common/statusCode';
+import { EHttpStatus } from './statusCode';
 
 class AppError extends Error {
   statusCode: EHttpStatus;
-  isOperation: boolean;
-  type: undefined;
 
-  constructor(statusCode: EHttpStatus, message: string, isOperation?: boolean, type = undefined) {
+  constructor(statusCode: EHttpStatus, message: string) {
     super();
-
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, AppError);
-    }
 
     this.statusCode = statusCode;
     this.message = message;
-    this.isOperation = !!isOperation;
-    this.type = type;
   }
 }
 

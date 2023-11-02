@@ -1,8 +1,10 @@
 import express, { Express } from 'express';
+import helmet from 'helmet';
 import apiRoute from '../api';
 
 const expressLoader = (app: Express) => {
   app.use(express.json());
+  app.use(helmet());
 
   app.use('/static', express.static('public'));
   app.use('/api/v1', apiRoute); // Root

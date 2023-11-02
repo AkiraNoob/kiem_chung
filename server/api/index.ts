@@ -1,7 +1,10 @@
 import express from 'express';
-import demoRoute from './demo/route';
+import authRoute from './auth/route';
+import userRouter from './user/route';
+
 const apiRoute = express.Router();
 
-apiRoute.use('/demo', demoRoute);
+apiRoute.use('/auth', authRoute);
+apiRoute.use('/user', userRouter);
 
 export default apiRoute;
