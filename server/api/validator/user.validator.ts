@@ -1,7 +1,7 @@
 import validateWrapper from '../../common/validator';
 import { TGetUserDetailParam } from '../../types/api/user.types';
 import { TUserSchema } from '../../types/schema/user.schema.types';
-import { createUserDTO, getUserDetailDTO } from './dto';
+import { createUserDTO, getUserDetailDTO } from '../DTO/user.dto';
 
 const userValidator = {
   validateCreateUser: validateWrapper<TUserSchema>((req) => createUserDTO.validate(req.body)),

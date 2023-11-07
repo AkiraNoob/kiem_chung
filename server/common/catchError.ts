@@ -11,12 +11,12 @@ const tryCatchWrapper =
       const result = await promise(req, res, next);
       res.status(result.statusCode).json({ data: result.data, message: result.message });
     } catch (error) {
-      const errorObject = catchError<T>(error);
+      const errorObject = catchError(error);
       res.status(errorObject.statusCode).json({ data: errorObject.data, message: errorObject.message });
     }
   };
 
-const catchError = <T>(error: unknown): TServiceResponseType<T> => {
+const catchError = (error: unknown) => {
   if (error instanceof AppError) {
     return {
       data: null,

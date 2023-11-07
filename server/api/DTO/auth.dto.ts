@@ -1,6 +1,6 @@
 import { ObjectSchema, object, string } from 'yup';
 import { EMAIL_REGEX, PASSWORD_REGEX } from '../../constant/regex';
-import { TLocalLoginPayload, TRegisterPayload } from '../../types/api/auth.types';
+import { TLocalLoginPayload, TRefreshJWTPayload, TRegisterPayload } from '../../types/api/auth.types';
 
 const localLoginDTO: ObjectSchema<TLocalLoginPayload> = object({
   email: string().required().trim().matches(EMAIL_REGEX, { message: 'Email format is invalid' }),
@@ -13,4 +13,8 @@ const registerDTO: ObjectSchema<TRegisterPayload> = object({
   fullName: string().required().trim(),
 });
 
-export { localLoginDTO, registerDTO };
+const refreshTokenDTO: ObjectSchema<TRefreshJWTPayload> = object({
+  refreshToken: string().required().trim(),
+});
+
+export { localLoginDTO, refreshTokenDTO, registerDTO };

@@ -7,19 +7,19 @@ const { Schema } = mongoose;
 const userSchema = new Schema<TUserSchema>({
   fullName: {
     type: String,
-    require: true,
+    required: true,
     trim: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
     trim: true,
     match: [EMAIL_REGEX, 'Email format is invalid'],
   },
   password: {
     type: String,
     trim: true,
-    require: true,
+    required: true,
   },
   avatar: {
     type: String,

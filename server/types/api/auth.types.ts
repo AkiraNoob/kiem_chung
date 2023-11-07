@@ -21,3 +21,7 @@ export type TJWTVerify = {
   // seconds expired
   exp: number;
 } & TJWTPayload;
+
+export type TRefreshJWTPayload = {
+  refreshToken: string;
+};
