@@ -1,12 +1,14 @@
-import { Express } from 'express';
+import express, { Express } from 'express';
 import expressLoader from './express';
 import loggerLoader from './logger';
 import mongooseLoader from './mongooes';
 import passportLoader from './passport';
 
-const appLoader = (app: Express) => {
+const appLoader = (connectDB: boolean = true) => {
+  const app: Express = express();
+
   loggerLoader(app);
-  mongooseLoader(app);
+  connectDB && mongooseLoader(app);
   passportLoader(app);
 
   //last

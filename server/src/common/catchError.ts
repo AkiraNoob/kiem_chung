@@ -25,10 +25,10 @@ const catchError = (error: unknown) => {
     };
   }
 
-  if (error instanceof mongoose.Error.ValidationError) {
+  if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.mongo.MongoError) {
     return {
       data: null,
-      statusCode: EHttpStatus.INTERNAL_SERVER_ERROR,
+      statusCode: EHttpStatus.BAD_REQUEST,
       message: error.message,
     };
   }

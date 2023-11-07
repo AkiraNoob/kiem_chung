@@ -1,6 +1,6 @@
 import { ObjectSchema, date, object, string } from 'yup';
 import { EMAIL_REGEX, PASSWORD_REGEX } from '../../constant/regex';
-import { TGetUserDetailParam } from '../../types/api/user.types';
+import { TGetUserDetailByEmail, TGetUserDetailByIdParam } from '../../types/api/user.types';
 import { TUserSchema } from '../../types/schema/user.schema.types';
 
 const createUserDTO: ObjectSchema<TUserSchema> = object({
@@ -11,8 +11,12 @@ const createUserDTO: ObjectSchema<TUserSchema> = object({
   avatar: string().optional(),
 });
 
-const getUserDetailDTO: ObjectSchema<TGetUserDetailParam> = object({
-  userId: string().required(),
+const getUserDetailByIdDTO: ObjectSchema<TGetUserDetailByIdParam> = object({
+  userId: string().required().trim(),
 });
 
-export { createUserDTO, getUserDetailDTO };
+const getUserDetailByEmailDTO: ObjectSchema<TGetUserDetailByEmail> = object({
+  email: string().required().trim(),
+});
+
+export { createUserDTO, getUserDetailByEmailDTO, getUserDetailByIdDTO };

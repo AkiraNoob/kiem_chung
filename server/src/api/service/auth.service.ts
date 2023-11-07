@@ -15,14 +15,14 @@ const authService = {
   loginWithEmailAndPassword: async (
     reqBody: TLocalLoginPayload,
   ): Promise<TServiceResponseType<{ token: ReturnJWTType; refreshToken: ReturnJWTType }>> => {
-    const user = await UserModel.findOne({ email: reqBody.email });
+    const user = await UserModel.findOne({ email: reqBody.email }).select('+password');
 
     if (!user) {
-      throw new AppError(EHttpStatus.UNAUTHORIZED, 'Wrong email');
+      throw new AppError(EHttpStatus.BAD_REQUEST, 'Wrong email');
     }
 
     if (!bcryptCompareSync(reqBody.password, user?.password)) {
-      throw new AppError(EHttpStatus.UNAUTHORIZED, 'Wrong password');
+      throw new AppError(EHttpStatus.BAD_REQUEST, 'Wrong password');
     }
 
     const userData = {
@@ -52,17 +52,7 @@ const authService = {
     };
   },
   register: async (reqBody: TRegisterPayload): Promise<TServiceResponseType> => {
-    const user = await UserModel.findOne({ email: reqBody.email });
-    if (user) {
-      return {
-        data: null,
-        message: 'This email is already exists',
-        statusCode: EHttpStatus.BAD_REQUEST,
-      };
-    }
-
     reqBody.password = bcryptHashSync(reqBody.password);
-
     await userService.createUser(reqBody);
 
     return {

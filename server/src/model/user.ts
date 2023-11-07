@@ -15,11 +15,13 @@ const userSchema = new Schema<TUserSchema>({
     required: true,
     trim: true,
     match: [EMAIL_REGEX, 'Email format is invalid'],
+    unique: true,
   },
   password: {
     type: String,
     trim: true,
     required: true,
+    select: false,
   },
   avatar: {
     type: String,

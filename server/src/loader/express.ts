@@ -16,7 +16,7 @@ const expressLoader = (app: Express) => {
   );
 
   app.use('/api', apiRoute); // Root
-  app.use('/static', express.static('public'));
+  app.use('/static', express.static('../public'));
 };
 
 export default expressLoader;
