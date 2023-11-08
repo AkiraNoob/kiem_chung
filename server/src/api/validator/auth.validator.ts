@@ -4,7 +4,7 @@ import { localLoginDTO, refreshTokenDTO, registerDTO } from '../DTO/auth.dto';
 
 const authValidator = {
   validateLocalLogin: validateWrapper<TLocalLoginPayload>((req) => localLoginDTO.validate(req.body)),
-  validateRegister: validateWrapper<TRegisterPayload>((req) => registerDTO.validate(req.body)),
+  validateRegister: validateWrapper<TRegisterPayload>((req) => registerDTO.validate(req.body, { abortEarly: false })),
   validateRefreshToken: validateWrapper<TRefreshJWTPayload>((req) =>
     refreshTokenDTO.validate({ refreshToken: req.cookies['refreshToken'] }),
   ),

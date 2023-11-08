@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import AppError from '../constant/error';
 import { EHttpStatus } from '../constant/statusCode';
-import { TServiceResponseType } from '../types/general.types';
+import { TServiceResponseBodyType, TServiceResponseType } from '../types/general.types';
 
 const tryCatchWrapper =
   <T>(promise: (req: Request, res: Response, next: NextFunction) => Promise<TServiceResponseType<T>>) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response<TServiceResponseBodyType<T | null>>, next: NextFunction) => {
     try {
       const result = await promise(req, res, next);
       res.status(result.statusCode).json({ data: result.data, message: result.message });

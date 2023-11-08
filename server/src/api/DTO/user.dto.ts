@@ -5,8 +5,8 @@ import { TUserSchema } from '../../types/schema/user.schema.types';
 
 const createUserDTO: ObjectSchema<TUserSchema> = object({
   fullName: string().required().trim(),
-  email: string().required().trim().matches(EMAIL_REGEX, { message: 'Email format is invalid' }),
-  password: string().required().trim().matches(PASSWORD_REGEX, { message: 'Password format is invalid' }),
+  email: string().required().trim().matches(EMAIL_REGEX, { message: 'email format is invalid' }),
+  password: string().required().trim().matches(PASSWORD_REGEX, { message: 'password format is invalid' }),
   dateOfBirth: date().optional(),
   avatar: string().optional(),
 });
