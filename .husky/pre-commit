@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+cd ./client; bash ./.husky/pre-commit
+cd ../server; bash ./.husky/pre-commit

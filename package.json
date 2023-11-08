@@ -1,0 +1,23 @@
+{
+  "name": "kiem_chung",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "(cd client && npm install) && (cd ../server && npm install)",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkiraNoob/kiem_chung.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AkiraNoob/kiem_chung/issues"
+  },
+  "homepage": "https://github.com/AkiraNoob/kiem_chung#readme",
+  "devDependencies": {
+    "husky": "^8.0.0"
+  }
+}
