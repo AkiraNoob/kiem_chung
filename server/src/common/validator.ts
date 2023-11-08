@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { ValidationError } from 'yup';
+import { AnyObject, ObjectSchema, ValidationError } from 'yup';
 import { EHttpStatus } from '../constant/statusCode';
 import { TValidatorResponseBodyType } from '../types/general.types';
+
+export const objectValidateOverride = <T extends AnyObject>(dto: ObjectSchema<T>, data: T) =>
+  dto.validate(data, {
+    abortEarly: false,
+  });
 
 const validateWrapper = <T>(
   validateCb: (req: Request<unknown, unknown, T>, res: Response, next: NextFunction) => Promise<T>,
@@ -11,7 +16,6 @@ const validateWrapper = <T>(
       await validateCb(req, res, next);
       next();
     } catch (err) {
-      console.log(JSON.parse(JSON.stringify(err)));
       res.status(EHttpStatus.BAD_REQUEST);
       if (err instanceof ValidationError) {
         res.json({
