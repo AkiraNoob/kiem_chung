@@ -4,18 +4,13 @@
   "packageManager": "npm",
   "reporters": ["html", "progress"],
   "testRunner": "jest",
-  "commandRunner": {
-    "command": "npm run test"
-  },
   "testRunner_comment": "Take a look at (missing 'homepage' URL in package.json) for information about the jest plugin.",
   "coverageAnalysis": "perTest",
   "mutate": ["src/**"],
-  "mutator": {},
   "ignoreStatic": true,
   "checkers": ["typescript"],
   "tsconfigFile": "tsconfig.json",
   "typescriptChecker": {
-    "prioritizePerformanceOverAccuracy": true
-  },
-  "buildCommand": "npm run build"
+    "prioritizePerformanceOverAccuracy": false
+  }
 }

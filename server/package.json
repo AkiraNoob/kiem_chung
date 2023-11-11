@@ -23,7 +23,8 @@
     "start": "cross-env NODE_ENV=production; node dist/index.js",
     "dev": "cross-env NODE_ENV=development; concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
     "test": "jest",
-    "test-dev": "jest --testPathIgnorePatterns=/.stryker-tmp/ --detectOpenHandles --coverage",
+    "test-dev-watch": "jest --testPathIgnorePatterns=/.stryker-tmp/ --coverage --detectOpenHandles --watch",
+    "test-dev": "jest --testPathIgnorePatterns=/.stryker-tmp/ --coverage --detectOpenHandles",
     "build-types": "tsc",
     "mutation-test": "npx stryker run"
   },

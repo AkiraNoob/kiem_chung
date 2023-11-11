@@ -47,12 +47,12 @@ const signRefreshJWT = (payload: TJWTPayload): TReturnJWTType => {
   throw new AppError(EHttpStatus.INTERNAL_SERVER_ERROR, 'Can not read .env');
 };
 
-const verifyRefreshJWT = (refreshToken: string) => {
+const verifyRefreshJWT = (refreshToken: string): TJWTVerify => {
   const secretKey = process.env.REFRESH_SECRET_KEY;
   if (!secretKey) throw new AppError(EHttpStatus.INTERNAL_SERVER_ERROR, 'Can not read .env');
 
   return jsonWebToken.verify(refreshToken, secretKey, {
-    algorithms: ['HS256'],
+    algorithms: [JWTAlgorithm],
   }) as TJWTVerify;
 };
 

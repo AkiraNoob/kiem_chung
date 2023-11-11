@@ -21,70 +21,67 @@ describe('Testing user service', () => {
     await mongoose.connect(mongoServer.getUri());
   });
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoose.connection.close();
   });
 
   describe('Create user', () => {
-    afterEach(async () => {
-      await UserModel.deleteMany({ email: userPayload.email });
-    });
-
     describe('Given valid payload', () => {
+      afterEach(async () => {
+        await UserModel.deleteMany({ email: userPayload.email });
+      });
+
       describe('Given completed schema payload', () => {
         it('should return status code 200 and user', async () => {
-          const result = await userService.createUser(userPayload);
-          expect(result.statusCode).toBe(EHttpStatus.OK);
-          expect(result.data).toStrictEqual(
-            expect.objectContaining({
-              email: expect.any(String),
-              password: expect.any(String),
-              fullName: expect.any(String),
-            }),
-          );
+          const spyedUserModelCreate = jest.spyOn(UserModel, 'create');
+
+          await expect(userService.createUser(userPayload)).resolves.toStrictEqual({
+            statusCode: EHttpStatus.OK,
+            data: expect.objectContaining(omit(userPayload, 'password')),
+          });
+
+          return expect(spyedUserModelCreate).toHaveBeenCalledWith(userPayload);
         });
       });
 
       describe('Given payload omit avatar', () => {
         it('should return status code 200 and user', async () => {
-          const result = await userService.createUser(omit(userPayload, 'avatar'));
-          expect(result.statusCode).toBe(EHttpStatus.OK);
-          expect(result.data).toStrictEqual(
-            expect.objectContaining({
-              email: expect.any(String),
-              password: expect.any(String),
-              fullName: expect.any(String),
-            }),
-          );
+          const spyedUserModelCreate = jest.spyOn(UserModel, 'create');
+          const userPayload: TUserSchema = {
+            email: 'tester.001@company.com',
+            password: bcryptHashSync('Tester@001'),
+            fullName: 'Tester 001',
+            dateOfBirth: new Date(),
+          };
+
+          await expect(userService.createUser(userPayload)).resolves.toStrictEqual({
+            statusCode: EHttpStatus.OK,
+            data: expect.objectContaining(omit(userPayload, 'password')),
+          });
+          return expect(spyedUserModelCreate).toHaveBeenCalledWith(userPayload);
         });
       });
 
       describe('Given payload omit dateOfBirth', () => {
         it('should return status code 200 and user', async () => {
-          const result = await userService.createUser(omit(userPayload, 'dateOfBirth'));
-          expect(result.statusCode).toBe(EHttpStatus.OK);
-          expect(result.data).toStrictEqual(
-            expect.objectContaining({
-              email: expect.any(String),
-              password: expect.any(String),
-              fullName: expect.any(String),
-            }),
-          );
-        });
-      });
+          const spyedUserModelCreate = jest.spyOn(UserModel, 'create');
+          const userPayload: TUserSchema = {
+            email: 'tester.001@company.com',
+            password: bcryptHashSync('Tester@001'),
+            fullName: 'Tester 001',
+            avatar: 's3_img_string',
+          };
 
-      describe('Given payload omit avatar, dateOfBirth', () => {
-        it('should return status code 200 and user', async () => {
-          const result = await userService.createUser(omit(userPayload, ['dateOfBirth', 'avatar']));
-          expect(result.statusCode).toBe(EHttpStatus.OK);
-          expect(result.data).toStrictEqual(
-            expect.objectContaining({
-              email: expect.any(String),
-              password: expect.any(String),
-              fullName: expect.any(String),
-            }),
-          );
+          await expect(userService.createUser(userPayload)).resolves.toStrictEqual({
+            statusCode: EHttpStatus.OK,
+            data: expect.objectContaining(omit(userPayload, 'password')),
+          });
+          return expect(spyedUserModelCreate).toHaveBeenCalledWith(userPayload);
         });
       });
     });
@@ -92,31 +89,25 @@ describe('Testing user service', () => {
     describe('Given invalid payload', () => {
       describe('Empty fullName', () => {
         it('should throw ValidationError error', async () => {
-          try {
-            await userService.createUser({ ...userPayload, fullName: '' });
-          } catch (error) {
-            expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-          }
+          return expect(userService.createUser({ ...userPayload, fullName: '' })).rejects.toBeInstanceOf(
+            mongoose.Error.ValidationError,
+          );
         });
       });
 
       describe('Empty email', () => {
         it('should throw ValidationError error', async () => {
-          try {
-            await userService.createUser({ ...userPayload, email: '' });
-          } catch (error) {
-            expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-          }
+          return expect(userService.createUser({ ...userPayload, email: '' })).rejects.toBeInstanceOf(
+            mongoose.Error.ValidationError,
+          );
         });
       });
 
       describe('Empty password', () => {
         it('should throw ValidationError error', async () => {
-          try {
-            await userService.createUser({ ...userPayload, password: '' });
-          } catch (error) {
-            expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-          }
+          return expect(userService.createUser({ ...userPayload, password: '' })).rejects.toBeInstanceOf(
+            mongoose.Error.ValidationError,
+          );
         });
       });
     });
@@ -126,25 +117,23 @@ describe('Testing user service', () => {
     let userId: string = '';
 
     beforeAll(async () => {
-      const result = await UserModel.create({ ...userPayload, password: bcryptHashSync(userPayload.password) });
-      userId = result._id.toString();
+      userId = (await UserModel.create(userPayload))._id.toString();
     });
 
     afterAll(async () => {
-      await UserModel.deleteMany({ _id: userId });
+      await UserModel.findByIdAndDelete(userId);
     });
 
     describe('Given valid payload', () => {
       it('should return status code 200 and user', async () => {
-        const result = await userService.getUserById({ userId });
+        const spyedUserModelFindById = jest.spyOn(UserModel, 'findById');
 
-        expect(result.statusCode).toBe(EHttpStatus.OK);
-        expect(result.data).toStrictEqual(
-          expect.objectContaining({
-            email: expect.any(String),
-            fullName: expect.any(String),
-          }),
-        );
+        await expect(userService.getUserById({ userId })).resolves.toStrictEqual({
+          statusCode: EHttpStatus.OK,
+          data: expect.objectContaining(omit(userPayload, 'password')),
+        });
+
+        return expect(spyedUserModelFindById).toHaveBeenCalledWith({ _id: userId });
       });
     });
 
@@ -153,82 +142,79 @@ describe('Testing user service', () => {
         it('should return status code 200 and null', async () => {
           const notExistUserId: string = new mongoose.Types.ObjectId().toString();
 
-          const result = await userService.getUserById({ userId: notExistUserId });
-
-          expect(result.statusCode).toBe(EHttpStatus.OK);
-          expect(result.data).toBeNull();
+          return expect(userService.getUserById({ userId: notExistUserId })).resolves.toStrictEqual({
+            statusCode: EHttpStatus.OK,
+            data: null,
+          });
         });
       });
 
       describe('Invalid format but not empty userId', () => {
         it('should return CastError error', async () => {
-          try {
-            const invalidUserId: string = '123';
-            await userService.getUserById({ userId: invalidUserId });
-          } catch (err) {
-            expect(err).toBeInstanceOf(mongoose.Error.CastError);
-          }
+          return expect(userService.getUserById({ userId: '123' })).rejects.toBeInstanceOf(mongoose.Error.CastError);
         });
       });
 
       describe('Empty userId', () => {
         it('should return CastError error', async () => {
-          try {
-            const emptyUserId: string = '';
-            await userService.getUserById({ userId: emptyUserId });
-          } catch (err) {
-            expect(err).toBeInstanceOf(mongoose.Error.CastError);
-          }
+          return expect(userService.getUserById({ userId: '' })).rejects.toBeInstanceOf(mongoose.Error.CastError);
         });
       });
     });
   });
 
   describe('Get user by email', () => {
-    let email: string = '';
-
     beforeAll(async () => {
-      const result = await UserModel.create({ ...userPayload, password: bcryptHashSync(userPayload.password) });
-      email = result.email.toString();
+      await UserModel.create(userPayload);
     });
 
     afterAll(async () => {
-      await UserModel.deleteMany({ email });
+      await UserModel.deleteMany({ email: userPayload.email });
     });
 
     describe('Given valid payload', () => {
       it('should return status code 200 and user', async () => {
-        const result = await userService.getUserByEmail({ email });
+        const spyedUserModelFindOne = jest.spyOn(UserModel, 'findOne');
 
-        expect(result.statusCode).toBe(EHttpStatus.OK);
-        expect(result.data).toStrictEqual(
-          expect.objectContaining({
-            email: expect.any(String),
-            fullName: expect.any(String),
-          }),
-        );
+        await expect(userService.getUserByEmail({ email: userPayload.email })).resolves.toStrictEqual({
+          statusCode: EHttpStatus.OK,
+          data: expect.objectContaining(omit(userPayload, 'password')),
+        });
+
+        return expect(spyedUserModelFindOne).toHaveBeenCalledWith({
+          email: userPayload.email,
+        });
       });
     });
 
     describe('Given invalid payload', () => {
       describe('Not exists but valid format email', () => {
         it('should return status code 200 and null', async () => {
-          const notExistUserEmail: string = 'lorem@ipsum.com';
-          const result = await userService.getUserByEmail({ email: notExistUserEmail });
+          const spyedUserModelFindOne = jest.spyOn(UserModel, 'findOne');
+          await expect(userService.getUserByEmail({ email: 'non.exist@company.com' })).resolves.toStrictEqual(
+            expect.objectContaining({
+              statusCode: EHttpStatus.OK,
+              data: null,
+            }),
+          );
 
-          expect(result.statusCode).toBe(EHttpStatus.OK);
-          expect(result.data).toBeNull();
+          expect(spyedUserModelFindOne).toHaveBeenCalledWith({
+            email: 'non.exist@company.com',
+          });
         });
       });
 
-      describe('Empty email', () => {
-        it('should return CastError error', async () => {
-          try {
-            const emptyEmail: string = '';
-            await userService.getUserByEmail({ email: emptyEmail });
-          } catch (err) {
-            expect(err).toBeInstanceOf(mongoose.Error.CastError);
-          }
+      describe('Invalid email', () => {
+        it('should return status code 200 and null', async () => {
+          const spyedUserModelFindOne = jest.spyOn(UserModel, 'findOne');
+          expect.assertions(2);
+          await expect(userService.getUserByEmail({ email: '' })).resolves.toStrictEqual({
+            statusCode: EHttpStatus.OK,
+            data: null,
+          });
+          expect(spyedUserModelFindOne).toHaveBeenCalledWith({
+            email: '',
+          });
         });
       });
     });

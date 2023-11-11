@@ -7,7 +7,6 @@ import RefreshTokenModel from '../../model/refreshToken';
 import UserModel from '../../model/user';
 import { TLocalLoginPayload, TRegisterPayload } from '../../types/api/auth.types';
 import { TServiceResponseType } from '../../types/general.types';
-import userService from './user.service';
 
 const authService = {
   loginWithEmailAndPassword: async (
@@ -32,7 +31,7 @@ const authService = {
     const token = signJWT(userData);
     const refreshToken = signRefreshJWT(userData);
 
-    await RefreshTokenModel.deleteMany({ userId: new mongoose.Types.ObjectId(userData.id)._id });
+    await RefreshTokenModel.deleteMany({ userId: new mongoose.Types.ObjectId(userData.id) });
 
     await RefreshTokenModel.create({
       userId: user._id,
@@ -51,7 +50,7 @@ const authService = {
   },
   register: async (reqBody: TRegisterPayload): Promise<TServiceResponseType> => {
     reqBody.password = bcryptHashSync(reqBody.password);
-    await userService.createUser(reqBody);
+    await UserModel.create(reqBody);
 
     return {
       data: null,
@@ -69,7 +68,7 @@ const authService = {
       fullName: verifiedRefreshToken.fullName,
     };
 
-    await RefreshTokenModel.deleteMany({ userId: new mongoose.Types.ObjectId(userData.id)._id });
+    await RefreshTokenModel.deleteMany({ userId: new mongoose.Types.ObjectId(userData.id) });
 
     const token = signJWT(userData);
     const refreshToken = signRefreshJWT(userData);
