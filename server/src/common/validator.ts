@@ -11,21 +11,22 @@ export const objectValidateOverride = <T extends AnyObject>(dto: ObjectSchema<T>
 const validateWrapper = <T>(
   validateCb: (req: Request<unknown, unknown, T>, res: Response, next: NextFunction) => Promise<T>,
 ) =>
-  async function (req: Request, res: Response<TValidatorResponseBodyType>, next: NextFunction) {
+  async function (
+    req: Request,
+    res: Response<TValidatorResponseBodyType<{ field: string; message: string }[]>>,
+    next: NextFunction,
+  ) {
     try {
       await validateCb(req, res, next);
       next();
     } catch (err) {
+      const _err = err as ValidationError;
       res.status(EHttpStatus.BAD_REQUEST);
-      if (err instanceof ValidationError) {
-        res.json({
-          message: 'Validation error: ' + err.inner.map((item) => item.message).join(', ') || '',
-        });
-        return;
-      }
       res.json({
-        message: 'Validation error: missing required field.',
+        message: 'Validation error',
+        data: _err.inner.map((item) => ({ field: item.path || '', message: item.message })),
       });
+      return;
     }
   };
 

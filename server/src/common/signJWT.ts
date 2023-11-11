@@ -2,14 +2,14 @@ import jsonWebToken from 'jsonwebtoken';
 import { JWTAlgorithm } from '../config/constant';
 import AppError from '../constant/error';
 import { EHttpStatus } from '../constant/statusCode';
-import { TJWTPayload } from '../types/api/auth.types';
+import { TJWTPayload, TJWTVerify } from '../types/api/auth.types';
 
-export type ReturnJWTType = {
+export type TReturnJWTType = {
   token: string;
   expires: string;
 };
 
-const signJWT = (payload: TJWTPayload): ReturnJWTType => {
+const signJWT = (payload: TJWTPayload): TReturnJWTType => {
   const expiresIn = process.env.JWT_EXPIRED;
   const secretKey = process.env.SECRET_KEY;
 
@@ -28,7 +28,7 @@ const signJWT = (payload: TJWTPayload): ReturnJWTType => {
   throw new AppError(EHttpStatus.INTERNAL_SERVER_ERROR, 'Can not read .env');
 };
 
-const signRefreshJWT = (payload: TJWTPayload): ReturnJWTType => {
+const signRefreshJWT = (payload: TJWTPayload): TReturnJWTType => {
   const expiresIn = process.env.REFRESH_JWT_EXPIRED;
   const secretKey = process.env.REFRESH_SECRET_KEY;
 
@@ -47,4 +47,13 @@ const signRefreshJWT = (payload: TJWTPayload): ReturnJWTType => {
   throw new AppError(EHttpStatus.INTERNAL_SERVER_ERROR, 'Can not read .env');
 };
 
-export { signJWT, signRefreshJWT };
+const verifyRefreshJWT = (refreshToken: string) => {
+  const secretKey = process.env.REFRESH_SECRET_KEY;
+  if (!secretKey) throw new AppError(EHttpStatus.INTERNAL_SERVER_ERROR, 'Can not read .env');
+
+  return jsonWebToken.verify(refreshToken, secretKey, {
+    algorithms: ['HS256'],
+  }) as TJWTVerify;
+};
+
+export { signJWT, signRefreshJWT, verifyRefreshJWT };

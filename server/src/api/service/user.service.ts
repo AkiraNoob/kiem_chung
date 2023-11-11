@@ -19,8 +19,8 @@ const userService = {
       statusCode: EHttpStatus.OK,
     };
   },
-  getUserByEmail: async (req: TGetUserDetailByEmail): Promise<TServiceResponseType<TUserSchema[] | null>> => {
-    const user = await UserModel.find({ email: req.email });
+  getUserByEmail: async (req: TGetUserDetailByEmail): Promise<TServiceResponseType<TUserSchema | null>> => {
+    const user = await UserModel.findOne({ email: req.email }); //email is unique
     return {
       data: user,
       statusCode: EHttpStatus.OK,

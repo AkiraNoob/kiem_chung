@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import generateJWTStrategy from '../config/jwtStrategy';
-import AppError from '../constant/error';
 import { EHttpStatus } from '../constant/statusCode';
 import { TUserSchema } from '../types/schema/user.schema.types';
 
@@ -12,7 +11,8 @@ const authenticateMiddleware = (req: Request, res: Response, next: NextFunction)
       return next(err);
     }
     if (!user) {
-      return next(new AppError(EHttpStatus.UNAUTHORIZED, 'Invalid Credentials.'));
+      res.status(EHttpStatus.UNAUTHORIZED).json({ message: 'Invalid Credentials' });
+      return;
     }
     return next();
   })(req, res, next);

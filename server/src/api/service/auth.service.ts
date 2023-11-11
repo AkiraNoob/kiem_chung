@@ -1,27 +1,25 @@
-import { Request } from 'express';
-import jsonwebtoken from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { bcryptCompareSync, bcryptHashSync } from '../../common/bcrypt';
-import { ReturnJWTType, signJWT, signRefreshJWT } from '../../common/signJWT';
+import { TReturnJWTType, signJWT, signRefreshJWT, verifyRefreshJWT } from '../../common/signJWT';
 import AppError from '../../constant/error';
 import { EHttpStatus } from '../../constant/statusCode';
 import RefreshTokenModel from '../../model/refreshToken';
 import UserModel from '../../model/user';
-import { TJWTVerify, TLocalLoginPayload, TRegisterPayload } from '../../types/api/auth.types';
+import { TLocalLoginPayload, TRegisterPayload } from '../../types/api/auth.types';
 import { TServiceResponseType } from '../../types/general.types';
 import userService from './user.service';
 
 const authService = {
   loginWithEmailAndPassword: async (
     reqBody: TLocalLoginPayload,
-  ): Promise<TServiceResponseType<{ token: ReturnJWTType; refreshToken: ReturnJWTType }>> => {
+  ): Promise<TServiceResponseType<{ token: TReturnJWTType; refreshToken: TReturnJWTType }>> => {
     const user = await UserModel.findOne({ email: reqBody.email }).select('+password');
 
     if (!user) {
       throw new AppError(EHttpStatus.BAD_REQUEST, 'Wrong email');
     }
 
-    if (!bcryptCompareSync(reqBody.password, user?.password)) {
+    if (!bcryptCompareSync(reqBody.password, user.password)) {
       throw new AppError(EHttpStatus.BAD_REQUEST, 'Wrong password');
     }
 
@@ -62,17 +60,9 @@ const authService = {
     };
   },
   refreshToken: async (
-    req: Request,
-  ): Promise<TServiceResponseType<{ token: ReturnJWTType; refreshToken: ReturnJWTType }>> => {
-    const refresToken = req.cookies['refreshToken'];
-    const secretKey = process.env.REFRESH_SECRET_KEY;
-
-    if (!secretKey) throw new AppError(EHttpStatus.INTERNAL_SERVER_ERROR, 'Cannot read .env');
-
-    const verifiedRefreshToken = jsonwebtoken.verify(refresToken, secretKey, {
-      algorithms: ['HS256'],
-    }) as TJWTVerify;
-
+    cookiesRefreshToken: string,
+  ): Promise<TServiceResponseType<{ token: TReturnJWTType; refreshToken: TReturnJWTType }>> => {
+    const verifiedRefreshToken = verifyRefreshJWT(cookiesRefreshToken);
     const userData = {
       id: verifiedRefreshToken.id,
       email: verifiedRefreshToken.email,
@@ -87,6 +77,7 @@ const authService = {
     await RefreshTokenModel.create({
       userId: userData.id,
       refreshToken: refreshToken.token,
+      expiredAt: refreshToken.expires,
     });
 
     return {

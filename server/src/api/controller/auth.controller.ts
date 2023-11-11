@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { catchError, tryCatchWrapper } from '../../common/catchError';
 import { sendAuthCookieToClient } from '../../common/cookies';
+import { EAuthCookiesKey } from '../../config/constant';
 import { TLocalLoginPayload, TRegisterPayload } from '../../types/api/auth.types';
 import { TServiceResponseBodyType } from '../../types/general.types';
 import authService from '../service/auth.service';
@@ -18,7 +19,7 @@ const authController = {
   register: tryCatchWrapper(async (req: Request) => await authService.register(req.body as TRegisterPayload)),
   refreshToken: async (req: Request, res: Response<TServiceResponseBodyType>) => {
     try {
-      const { data, statusCode, message } = await authService.refreshToken(req);
+      const { data, statusCode, message } = await authService.refreshToken(req.cookies[EAuthCookiesKey.RefreshToken]);
       sendAuthCookieToClient(res, data).status(statusCode).json({ data: null, message: message });
     } catch (error) {
       const errorObject = catchError(error);

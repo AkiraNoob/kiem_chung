@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import appLoader from './loader';
+import appLoader from './loader/appLoader';
 import mongooseLoader from './loader/mongooes';
 
 dotenv.config();

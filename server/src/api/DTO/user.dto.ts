@@ -9,14 +9,20 @@ const createUserDTO: ObjectSchema<TUserSchema> = object({
   password: string().required().trim().matches(PASSWORD_REGEX, { message: 'password format is invalid' }),
   dateOfBirth: date().optional(),
   avatar: string().optional(),
-});
+})
+  .noUnknown(true)
+  .strict();
 
 const getUserDetailByIdDTO: ObjectSchema<TGetUserDetailByIdParam> = object({
   userId: string().required().trim(),
-});
+})
+  .noUnknown(true)
+  .strict();
 
 const getUserDetailByEmailDTO: ObjectSchema<TGetUserDetailByEmail> = object({
   email: string().required().trim(),
-});
+})
+  .noUnknown(true)
+  .strict();
 
 export { createUserDTO, getUserDetailByEmailDTO, getUserDetailByIdDTO };

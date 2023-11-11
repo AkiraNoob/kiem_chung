@@ -11,7 +11,7 @@ const expressLoader = (app: Express) => {
   app.use(
     cors({
       credentials: true,
-      origin: [/^http:\/\/localhost/, /^http:\/\/127.0.0.1/],
+      origin: [/^http:\/\/localhost/, /^http:\/\/127.0.0.1/, /127.0.0.1/],
     }),
   );
 

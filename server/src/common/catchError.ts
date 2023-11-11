@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { JsonWebTokenError, NotBeforeError, TokenExpiredError } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import AppError from '../constant/error';
 import { EHttpStatus } from '../constant/statusCode';
@@ -25,10 +26,22 @@ const catchError = (error: unknown) => {
     };
   }
 
-  if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.mongo.MongoError) {
+  if (
+    error instanceof mongoose.Error.ValidationError ||
+    error instanceof mongoose.mongo.MongoServerError ||
+    error instanceof mongoose.Error.CastError
+  ) {
     return {
       data: null,
       statusCode: EHttpStatus.BAD_REQUEST,
+      message: error.message,
+    };
+  }
+
+  if (error instanceof JsonWebTokenError || error instanceof TokenExpiredError || error instanceof NotBeforeError) {
+    return {
+      data: null,
+      statusCode: EHttpStatus.UNAUTHORIZED,
       message: error.message,
     };
   }
