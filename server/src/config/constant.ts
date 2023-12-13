@@ -4,3 +4,7 @@ export enum EAuthCookiesKey {
   Token = 'token',
   RefreshToken = 'refreshToken',
 }
+
+export enum EOthersCookiesKey {
+  Spotify = 'Spotify',
+}

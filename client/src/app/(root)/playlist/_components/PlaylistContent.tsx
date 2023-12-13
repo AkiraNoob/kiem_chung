@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import MediaItem from "@/components/Items/MediaItem";
-import { useRouter } from "next/navigation";
-import LikeButton from "../../search/_components/LikeButton";
+import MediaItem from '@/components/Items/MediaItem';
+import { useRouter } from 'next/navigation';
+import LikeButton from '../../search/_components/LikeButton';
 
 interface PlaylistContentProps {
   songs: ISong[];
@@ -12,11 +12,7 @@ const PlaylistContent: React.FC<PlaylistContentProps> = ({ songs }) => {
   const router = useRouter();
 
   if (songs.length === 0) {
-    return (
-      <div className="flex flex-col gap-y-2 w-full px-6 text-neutral-400">
-        No songs in playlist
-      </div>
-    );
+    return <div className="flex flex-col gap-y-2 w-full px-6 text-neutral-400">No songs in playlist</div>;
   }
 
   return (
@@ -24,7 +20,7 @@ const PlaylistContent: React.FC<PlaylistContentProps> = ({ songs }) => {
       {songs.map((song) => (
         <div key={song.id} className="flex items-center gap-x-4 w-full">
           <div className="flex-1">
-            <MediaItem data={song} onClick={() => {}} />{" "}
+            <MediaItem data={song} />
           </div>
           <LikeButton songId={song.id} />
         </div>

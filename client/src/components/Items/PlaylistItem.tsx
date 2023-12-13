@@ -1,18 +1,22 @@
-"use client";
+'use client';
 
-import Image from "next/image";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface PlaylistItemProps {
   data: IPlaylist;
-  onClick?: (id: string) => void;
 }
 
-const PlaylistItem: React.FC<PlaylistItemProps> = ({ data, onClick }) => {
-  const handleClick = () => {};
+const PlaylistItem: React.FC<PlaylistItemProps> = ({ data }) => {
+  const router = useRouter();
+  const handleOnClickEachPlaylist = () => {
+    router.push('/playlist');
+    console.log(data.id);
+  };
 
   return (
     <div
-      onClick={() => onClick!(data.id)}
+      onClick={handleOnClickEachPlaylist}
       className="
         flex 
         items-center 
@@ -33,18 +37,11 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ data, onClick }) => {
           overflow-hidden
         "
       >
-        <Image
-          fill
-          src={data.image_path || "/images/liked.png"}
-          alt="MediaItem"
-          className="object-cover"
-        />
+        <Image fill src={data.image_path || '/images/liked.png'} alt="MediaItem" className="object-cover" />
       </div>
       <div className="flex flex-col gap-y-1 overflow-hidden">
         <p className="text-white truncate">{data.title}</p>
-        <p className="text-neutral-400 text-sm truncate">
-          Playlist • {data.songs.length} songs
-        </p>
+        <p className="text-neutral-400 text-sm truncate">Playlist • {data.songs.length} songs</p>
       </div>
     </div>
   );

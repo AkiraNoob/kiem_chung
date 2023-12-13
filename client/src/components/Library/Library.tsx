@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { TbPlaylist } from "react-icons/tb";
-import { AiOutlinePlus } from "react-icons/ai";
-import Link from "next/link";
-import MediaItem from "../Items/MediaItem";
-import PlaylistItem from "../Items/PlaylistItem";
-import { useRouter } from "next/navigation";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { TbPlaylist } from 'react-icons/tb';
+import MediaItem from '../Items/MediaItem';
+import PlaylistItem from '../Items/PlaylistItem';
 
 interface LibraryProps {
   songs: ISong[];
@@ -70,13 +70,12 @@ const Library: React.FC<LibraryProps> = ({ songs }) => {
       >
         <PlaylistItem
           data={{
-            id: "1",
-            user_id: "user",
+            id: '1',
+            user_id: 'user',
             songs: songs,
-            title: "Liked Songs",
-            image_path: "/images/liked.png",
+            title: 'Liked Songs',
+            image_path: '/images/liked.png',
           }}
-          onClick={(id) => router.push("/playlist")}
         />
       </div>
       <div

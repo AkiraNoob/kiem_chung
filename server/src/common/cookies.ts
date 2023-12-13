@@ -1,5 +1,6 @@
 import { CookieOptions, Response } from 'express';
-import { EAuthCookiesKey } from '../config/constant';
+import { EAuthCookiesKey, EOthersCookiesKey } from '../config/constant';
+import { ISpotifyTokenResponse } from '../types/api/spotify.types';
 import { TReturnJWTType } from './signJWT';
 
 export const sendToClientCookieOptions = (expires: string): CookieOptions => ({
@@ -17,5 +18,14 @@ export const sendAuthCookieToClient = (
   res
     .cookie(EAuthCookiesKey.Token, token.token, sendToClientCookieOptions(token.expires))
     .cookie(EAuthCookiesKey.RefreshToken, refreshToken.token, sendToClientCookieOptions(refreshToken.expires));
+  return res;
+};
+
+export const sendSpotifyCookieToClient = (res: Response, spotifyAuthCredentials: ISpotifyTokenResponse) => {
+  res.cookie(
+    EOthersCookiesKey.Spotify,
+    spotifyAuthCredentials.access_token,
+    sendToClientCookieOptions(spotifyAuthCredentials.expires_in.toString()),
+  );
   return res;
 };

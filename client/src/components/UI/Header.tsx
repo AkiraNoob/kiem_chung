@@ -1,15 +1,16 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { twMerge } from "tailwind-merge";
+import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
-import { RxCaretLeft } from "react-icons/rx";
-import { RxCaretRight } from "react-icons/rx";
-import { HiHome } from "react-icons/hi";
-import { BiSearch } from "react-icons/bi";
-import Button from "./Button";
-import { useState } from "react";
-import { FaUserAlt } from "react-icons/fa";
+import { userContext } from '@/context/UserContext';
+import useLogout from '@/hooks/auth/useLogout';
+import Link from 'next/link';
+import { useContext } from 'react';
+import { BiSearch } from 'react-icons/bi';
+import { HiHome } from 'react-icons/hi';
+import { RxCaretLeft, RxCaretRight } from 'react-icons/rx';
+import Button from './Button';
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -18,12 +19,9 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
   const router = useRouter();
-  const [isLogin, setIsLogin] = useState(false);
+  const { isLogin } = useContext(userContext);
+  const { trigger } = useLogout();
 
-  const handleLogout = () => {
-    //handle logout
-    setIsLogin(false);
-  };
   return (
     <div
       className={twMerge(
@@ -122,46 +120,35 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                 
             "
         >
-          {isLogin == true ? (
+          {isLogin ? (
             <div className="flex gap-x-4 items-center">
-              <Button
-                onClick={handleLogout}
-                className="bg-white px-6 py-2 hover:scale-110"
-              >
+              <Button onClick={() => trigger()} className="bg-white px-6 py-2 hover:scale-110">
                 Logout
               </Button>
-              <Button
-                onClick={() => {
-                  router.push("/account");
-                }}
-                className="bg-white hover:scale-110 px-4"
-              >
-                <FaUserAlt />
+              <Button className="bg-white hover:scale-110 px-4 py-2">
+                <Link href={'/signup'} prefetch className="block w-max">
+                  Sign up
+                </Link>
               </Button>
             </div>
           ) : (
             <>
               <div>
                 <Button
-                  onClick={() => {
-                    router.push("/signup");
-                  }}
                   className="
-                    bg-transparent
-                    text-neutral-300
-                    hover:scale-110
-                    hover:text-white
-                "
+                 bg-transparent
+                 text-neutral-300
+                 hover:scale-110
+                 hover:text-white
+               "
                 >
-                  Sign up
+                  <Link href={'/signup'} prefetch className="block w-max">
+                    Sign up
+                  </Link>
                 </Button>
               </div>
               <div>
                 <Button
-                  onClick={() => {
-                    //router.push("/login");
-                    setIsLogin(true);
-                  }}
                   className="
                     bg-white
                     px-3
@@ -170,7 +157,9 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                     hover:scale-110
                 "
                 >
-                  Log in
+                  <Link href={'/login'} prefetch>
+                    Login
+                  </Link>
                 </Button>
               </div>
             </>

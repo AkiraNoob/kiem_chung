@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { catchError, tryCatchWrapper } from '../../common/catchError';
 import { sendAuthCookieToClient } from '../../common/cookies';
 import { EAuthCookiesKey } from '../../config/constant';
+import { EHttpStatus } from '../../constant/statusCode';
 import { TLocalLoginPayload, TRegisterPayload } from '../../types/api/auth.types';
 import { TServiceResponseBodyType } from '../../types/general.types';
 import authService from '../service/auth.service';
@@ -25,6 +26,12 @@ const authController = {
       const errorObject = catchError(error);
       res.status(errorObject.statusCode).json({ data: errorObject.data, message: errorObject.message });
     }
+  },
+  logout: async (_req: Request, res: Response) => {
+    res.clearCookie(EAuthCookiesKey.Token).clearCookie(EAuthCookiesKey.RefreshToken).status(EHttpStatus.OK).json({
+      data: null,
+      message: 'Logout successfully',
+    });
   },
 };
 

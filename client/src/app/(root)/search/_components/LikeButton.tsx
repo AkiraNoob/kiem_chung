@@ -1,7 +1,7 @@
 // import { useToast } from "@/components/UI/Toast/use-toast";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 
 interface LikeButtonProps {
   songId: string;
@@ -35,7 +35,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ songId }) => {
 
   return (
     <button onClick={likeHandler} className="hover:opacity-75 transition">
-      <Icon color={isLiked ? "#22c55e" : "#A7A7A7"} size={25} />
+      <Icon color={isLiked ? '#22c55e' : '#A7A7A7'} size={25} />
     </button>
   );
 };

@@ -1,13 +1,14 @@
-import React from "react";
+'use client';
+import React, { ComponentPropsWithoutRef } from 'react';
 
-interface InputProps {
+interface InputProps extends ComponentPropsWithoutRef<'input'> {
   className?: string;
   id: string;
   label: string;
   type: string;
 }
 
-const AuthInput: React.FC<InputProps> = ({ className, id, label, type }) => {
+const AuthInput: React.FC<InputProps> = ({ className, id, label, type, ...inputProps }) => {
   return (
     <>
       <label
@@ -24,7 +25,8 @@ const AuthInput: React.FC<InputProps> = ({ className, id, label, type }) => {
         {label}
       </label>
       <input
-        className="
+        {...inputProps}
+        className={`
             w-full
             rounded
             bg-neutral-800
@@ -39,7 +41,8 @@ const AuthInput: React.FC<InputProps> = ({ className, id, label, type }) => {
             focus:border-white
             outline-none
             transition
-        "
+            ${className}
+        `}
         id={id}
         type={type}
         placeholder={label}

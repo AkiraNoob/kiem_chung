@@ -1,3 +1,4 @@
+import AppError from '../../constant/error';
 import { EHttpStatus } from '../../constant/statusCode';
 import UserModel from '../../model/user';
 import {
@@ -31,6 +32,18 @@ const userService = {
     const user = await UserModel.findOne({ email: req.email }); //email is unique
     return {
       data: user,
+      statusCode: EHttpStatus.OK,
+    };
+  },
+  getMe: async (user: TUserSchema): Promise<TServiceResponseType<TUserSchema | null>> => {
+    const foundUser = await UserModel.findOne({ email: user.email }); //email is unique
+
+    if (!foundUser) {
+      throw new AppError(EHttpStatus.NOT_FOUND, 'User not found');
+    }
+
+    return {
+      data: foundUser,
       statusCode: EHttpStatus.OK,
     };
   },

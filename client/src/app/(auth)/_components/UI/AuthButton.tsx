@@ -1,11 +1,11 @@
-import { forwardRef } from "react";
-import { twMerge } from "tailwind-merge";
+'use client';
+import { forwardRef } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-interface AuthButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+interface AuthButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 const AuthButton = forwardRef<HTMLButtonElement, AuthButtonProps>(
-  ({ className, children, disabled, type = "button", ...props }, ref) => {
+  ({ className, children, disabled, type = 'button', ...props }, ref) => {
     return (
       <button
         type={type}
@@ -37,6 +37,6 @@ const AuthButton = forwardRef<HTMLButtonElement, AuthButtonProps>(
   }
 );
 
-AuthButton.displayName = "Button";
+AuthButton.displayName = 'Button';
 
 export default AuthButton;

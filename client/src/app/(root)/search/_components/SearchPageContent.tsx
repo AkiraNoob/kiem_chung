@@ -71,7 +71,7 @@ const SearchPageContent = () => {
       "
     >
       {genres.map((item) => (
-        <GenreItem key={item.id} data={item} onClick={() => {}} />
+        <GenreItem key={item.id} data={item} />
       ))}
     </div>
   );

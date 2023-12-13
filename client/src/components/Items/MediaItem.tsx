@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import Image from "next/image";
+import Image from 'next/image';
 
 interface MediaItemProps {
   data: ISong;
-  onClick?: (id: string) => void;
 }
 
-const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
-  const handleClick = () => {};
-
+const MediaItem: React.FC<MediaItemProps> = ({ data }) => {
+  const handleOnClickEachMediaItem = () => {
+    console.log(data.id);
+  };
   return (
     <div
-      onClick={handleClick}
+      onClick={handleOnClickEachMediaItem}
       className="
         flex 
         items-center 
@@ -33,12 +33,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
           overflow-hidden
         "
       >
-        <Image
-          fill
-          src={data.image_path || "/images/liked.png"}
-          alt="MediaItem"
-          className="object-cover"
-        />
+        <Image fill src={data.image_path || '/images/liked.png'} alt="MediaItem" className="object-cover" />
       </div>
       <div className="flex flex-col gap-y-1 overflow-hidden">
         <p className="text-white truncate">{data.title}</p>
