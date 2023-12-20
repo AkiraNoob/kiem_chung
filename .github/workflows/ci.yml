@@ -17,44 +17,17 @@ env:
   SPOTIFY_CLIENT_ID: 47f3995362ad43ab997bc64b097f840e
   SPOTIFY_CLIENT_SECRET: 9d2940eefa814d87a3cfb0176b6509fd
 jobs:
-  test_ubuntu_latest:
-    name: Test (ubuntu_latest ${{ github.run_number }})
+  run_test:
+    strategy:
+      matrix:
+        version: [16, 18, 20]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: Test (${{ matrix.os }}, node version v${{ matrix.version }})
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Dependencies
-        working-directory: ./server
-        run: npm install
-      - name: Unit Test
-        working-directory: ./server
-        run: npm run test-dev
-      - name: Mutation Test
-        working-directory: ./server
-        run: npm run mutation-test
-      - run: echo "job run successfully"
-
-  test_windows_latest:
-    name: Test (windows_latest ${{ github.run_number }})
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Dependencies
-        working-directory: ./server
-        run: npm install
-      - name: Unit Test
-        working-directory: ./server
-        run: npm run test-dev
-      - name: Mutation Test
-        working-directory: ./server
-        run: npm run mutation-test
-      - run: echo "job run successfully"
-
-  test_macOS_latest:
-    name: Test (macos-latest ${{ github.run_number }})
-    runs-on: macos-latest
-    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Dependencies
