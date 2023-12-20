@@ -1,13 +1,55 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
-on: [push]
+name: Lab2 action
+run-name: ${{ github.actor }} is running Lab2 action
+on:
+  pull_request:
+    types: [opened, reopened]
+  push:
+defaults:
+  run:
+    working-directory: ./server
+env:
+  PORT: 8000
+  MONGODB_CONNECT_STRING: mongodb+srv://21521307_UIT:<password>@myfirstcluster.9ham1ww.mongodb.net/kiem_chung?retryWrites=true&w=majority
+  MONGODB_PASSWORD: Admin123
+  SECRET_KEY: Adm1nS3c43tK3Y
+  JWT_EXPIRED: 300
+  REFRESH_SECRET_KEY: ReAdm1nfreS3c43tK3Ysh
+  REFRESH_JWT_EXPIRED: 604800
+  SPOTIFY_CLIENT_ID: 47f3995362ad43ab997bc64b097f840e
+  SPOTIFY_CLIENT_SECRET: 9d2940eefa814d87a3cfb0176b6509fd
 jobs:
-  check-bats-version:
+  test_ubuntu_latest:
+    name: Test (ubuntu_latest ${{ github.run_number }})
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "14"
-      - run: npm install -g bats
-      - run: bats -v
+      - name: Install Dependencies
+        run: npm install
+      - name: Unit Test
+        run: npm run test-dev
+      - name: Mutation Test
+        run: npm run mutation-test
+      - run: echo "job run successfully"
+
+  test_windows_latest:
+    name: Test (ubuntu_latest ${{ github.run_number }})
+    runs-on: windows-latest
+    steps:
+      - name: Install Dependencies
+        run: npm install
+      - name: Unit Test
+        run: npm run test-dev
+      - name: Mutation Test
+        run: npm run mutation-test
+      - run: echo "job run successfully"
+
+  test_macOS_latest:
+    name: Test (ubuntu_latest ${{ github.run_number }})
+    runs-on: macos-latest-latest
+    steps:
+      - name: Install Dependencies
+        run: npm install
+      - name: Unit Test
+        run: npm run test-dev
+      - name: Mutation Test
+        run: npm run mutation-test
+      - run: echo "job run successfully"
