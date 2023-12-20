@@ -55,7 +55,7 @@ const authService = {
     return {
       data: null,
       statusCode: EHttpStatus.OK,
-      message: '',
+      message: 'Register successfully',
     };
   },
   refreshToken: async (

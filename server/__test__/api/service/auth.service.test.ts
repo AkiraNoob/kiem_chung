@@ -11,20 +11,28 @@ import UserModel from '../../../src/model/user';
 import { TLocalLoginPayload, TRegisterPayload } from '../../../src/types/api/auth.types';
 import { TUserSchema } from '../../../src/types/schema/user.schema.types';
 
-const userPayload: TUserSchema = {
-  email: 'tester.001@company.com',
-  password: bcryptCommon.bcryptHashSync('Tester@001'),
-  fullName: 'Tester 001',
-  avatar: 's3_img_string',
-  dateOfBirth: new Date(),
-};
+const generateMockPayload = () => {
+  const userPayload: TUserSchema = {
+    email: 'tester.001@company.com',
+    password: bcryptCommon.bcryptHashSync('Tester@001'),
+    fullName: 'Tester 001',
+    avatar: 's3_img_string',
+    dateOfBirth: new Date(),
+  };
 
-const mockRegisterPayload: TRegisterPayload = {
-  ...omit(userPayload, ['avatar', 'dateOfBirth']),
-  password: 'Tester@001',
-};
+  const mockRegisterPayload: TRegisterPayload = {
+    ...omit(userPayload, ['avatar', 'dateOfBirth']),
+    password: 'Tester@001',
+  };
 
-const mockLocalLoginPayload: TLocalLoginPayload = omit(mockRegisterPayload, 'fullName');
+  const mockLocalLoginPayload: TLocalLoginPayload = omit(mockRegisterPayload, 'fullName');
+
+  return {
+    userPayload,
+    mockRegisterPayload,
+    mockLocalLoginPayload,
+  };
+};
 
 describe('Testing auth service', () => {
   beforeAll(async () => {
@@ -43,14 +51,18 @@ describe('Testing auth service', () => {
 
   describe('Login with email and password service', () => {
     beforeAll(async () => {
+      const { userPayload } = generateMockPayload();
       await UserModel.create(userPayload);
     });
 
     afterAll(async () => {
+      const { userPayload } = generateMockPayload();
       await UserModel.deleteMany({ email: userPayload.email });
     });
 
     describe('Given valid payload', () => {
+      const { mockLocalLoginPayload } = generateMockPayload();
+
       const spyedRefreshCreate = jest.spyOn(RefreshTokenModel, 'create');
       const spyedRefreshDelete = jest.spyOn(RefreshTokenModel, 'deleteMany');
       const spyedFindUser = jest.spyOn(UserModel, 'findOne');
@@ -95,6 +107,8 @@ describe('Testing auth service', () => {
     describe('Given invalid payload', () => {
       describe('Given non-exist email', () => {
         it('should return statusCode 400 and message is "Wrong email"', async () => {
+          const { mockLocalLoginPayload } = generateMockPayload();
+
           const nonExistEmail = 'LoremIpsum';
           const mockLocalLoginPayloadInvalidEmail = { ...mockLocalLoginPayload, email: nonExistEmail };
 
@@ -109,6 +123,8 @@ describe('Testing auth service', () => {
 
       describe('Given wrong password', () => {
         it('should return statusCode 400 and message is "Wrong password"', async () => {
+          const { mockLocalLoginPayload } = generateMockPayload();
+
           const spyedBcryptCompare = jest.spyOn(bcryptCommon, 'bcryptCompareSync');
           const wrongPassword = 'WrongPassword';
           const mockLocalLoginPayloadInvalidEmail = { ...mockLocalLoginPayload, password: wrongPassword };
@@ -129,11 +145,15 @@ describe('Testing auth service', () => {
 
   describe('Register service', () => {
     afterAll(async () => {
+      const { userPayload } = generateMockPayload();
+
       await UserModel.deleteMany({ email: userPayload.email });
     });
 
     describe('Given valid payload', () => {
       it('should return statusCode 200 and data is null and message is "Register successfully"', async () => {
+        const { mockRegisterPayload } = generateMockPayload();
+
         const spyedUserModelCreate = jest.spyOn(UserModel, 'create');
         const resolveData = {
           statusCode: EHttpStatus.OK,
@@ -152,6 +172,7 @@ describe('Testing auth service', () => {
     describe('Given invalid payload', () => {
       describe('Given exist email', () => {
         it('should return error is instanceOf MongoServerError and message contains "duplicate key error collection"', async () => {
+          const { mockRegisterPayload } = generateMockPayload();
           await expect(authService.register(mockRegisterPayload)).rejects.toBeInstanceOf(
             mongoose.mongo.MongoServerError,
           );
@@ -163,6 +184,7 @@ describe('Testing auth service', () => {
 
       describe('Given invalid email format', () => {
         it('should return error is instanceOf MongoServerError and message "Email format is invalid', async () => {
+          const { mockRegisterPayload } = generateMockPayload();
           const invalidEmailFormat = 'LoremIpsum';
           const mockLocalLoginPayloadInvalidEmail = { ...mockRegisterPayload, email: invalidEmailFormat };
 
@@ -182,6 +204,7 @@ describe('Testing auth service', () => {
     let userData: { id: string; email: string; fullName: string } = { id: '', email: '', fullName: '' };
 
     beforeAll(async () => {
+      const { userPayload } = generateMockPayload();
       const user = await UserModel.create(userPayload);
 
       userData = {
