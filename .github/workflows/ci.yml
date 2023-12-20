@@ -19,7 +19,7 @@ jobs:
     name: Test (ubuntu_latest ${{ github.run_number }})
     runs-on: ubuntu-latest
     steps:
-      - run: ls -a ../../
+      - run: ls -a ../
       - name: Install Dependencies
         run: npm install
       - name: Unit Test
