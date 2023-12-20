@@ -219,4 +219,47 @@ describe('Testing user service', () => {
       });
     });
   });
+
+  describe('Get me', () => {
+    beforeAll(async () => {
+      await UserModel.create(userPayload);
+    });
+
+    afterAll(async () => {
+      await UserModel.deleteMany({ email: userPayload.email });
+    });
+
+    describe('Given valid payload', () => {
+      it('should return status code 200 and user', async () => {
+        const spyedUserModelFindOne = jest.spyOn(UserModel, 'findOne');
+
+        await expect(userService.getMe(userPayload)).resolves.toStrictEqual({
+          statusCode: EHttpStatus.OK,
+          data: expect.objectContaining(omit(userPayload, 'password')),
+        });
+
+        return expect(spyedUserModelFindOne).toHaveBeenCalledWith({
+          email: userPayload.email,
+        });
+      });
+    });
+
+    describe('Given invalid payload', () => {
+      describe('Not exists user', () => {
+        it('should return status code 400 and message "User not found"', async () => {
+          const spyedUserModelFindOne = jest.spyOn(UserModel, 'findOne');
+          await expect(userService.getMe({ ...userPayload, email: 'non.exist@company.com' })).rejects.toStrictEqual(
+            expect.objectContaining({
+              statusCode: EHttpStatus.NOT_FOUND,
+              message: 'User not found',
+            }),
+          );
+
+          expect(spyedUserModelFindOne).toHaveBeenCalledWith({
+            email: 'non.exist@company.com',
+          });
+        });
+      });
+    });
+  });
 });

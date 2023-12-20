@@ -5,11 +5,18 @@
   "reporters": ["html", "progress"],
   "testRunner": "jest",
   "testRunner_comment": "Take a look at (missing 'homepage' URL in package.json) for information about the jest plugin.",
+  "coverageAnalysis": "perTest",
   "mutate": ["src/**"],
   "ignoreStatic": true,
+  "tempDirName": "stryker-tmp",
   "checkers": ["typescript"],
   "tsconfigFile": "tsconfig.json",
   "typescriptChecker": {
-    "prioritizePerformanceOverAccuracy": false
-  }
+    "prioritizePerformanceOverAccuracy": true
+  },
+  "jest": {
+    "configFile": "../../jest.config.js",
+    "enableFindRelatedTests": false
+  },
+  "timeoutMS": 8000
 }

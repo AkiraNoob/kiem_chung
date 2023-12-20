@@ -45,10 +45,6 @@ describe('Testing auth service', () => {
     await mongoose.connection.close();
   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('Login with email and password service', () => {
     beforeAll(async () => {
       const { userPayload } = generateMockPayload();
@@ -67,7 +63,12 @@ describe('Testing auth service', () => {
       const spyedRefreshDelete = jest.spyOn(RefreshTokenModel, 'deleteMany');
       const spyedFindUser = jest.spyOn(UserModel, 'findOne');
       const spyedBcryptCompare = jest.spyOn(bcryptCommon, 'bcryptCompareSync');
-      it('should return statusCode 200 and data should contain {token, refreshToken} and message is "Login successfully"', async () => {
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it.only('should return statusCode 200 and data should contain {token, refreshToken} and message is "Login successfully"', async () => {
         const data = {
           token: {
             token: expect.any(String),
@@ -106,7 +107,11 @@ describe('Testing auth service', () => {
 
     describe('Given invalid payload', () => {
       describe('Given non-exist email', () => {
-        it('should return statusCode 400 and message is "Wrong email"', async () => {
+        afterEach(() => {
+          jest.clearAllMocks();
+        });
+
+        it.only('should return statusCode 400 and message is "Wrong email"', async () => {
           const { mockLocalLoginPayload } = generateMockPayload();
 
           const nonExistEmail = 'LoremIpsum';
@@ -122,7 +127,11 @@ describe('Testing auth service', () => {
       });
 
       describe('Given wrong password', () => {
-        it('should return statusCode 400 and message is "Wrong password"', async () => {
+        afterEach(() => {
+          jest.clearAllMocks();
+        });
+
+        it.only('should return statusCode 400 and message is "Wrong password"', async () => {
           const { mockLocalLoginPayload } = generateMockPayload();
 
           const spyedBcryptCompare = jest.spyOn(bcryptCommon, 'bcryptCompareSync');
@@ -151,7 +160,11 @@ describe('Testing auth service', () => {
     });
 
     describe('Given valid payload', () => {
-      it('should return statusCode 200 and data is null and message is "Register successfully"', async () => {
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it.only('should return statusCode 200 and data is null and message is "Register successfully"', async () => {
         const { mockRegisterPayload } = generateMockPayload();
 
         const spyedUserModelCreate = jest.spyOn(UserModel, 'create');
@@ -171,7 +184,11 @@ describe('Testing auth service', () => {
 
     describe('Given invalid payload', () => {
       describe('Given exist email', () => {
-        it('should return error is instanceOf MongoServerError and message contains "duplicate key error collection"', async () => {
+        afterEach(() => {
+          jest.clearAllMocks();
+        });
+
+        it.only('should return error is instanceOf MongoServerError and message contains "duplicate key error collection"', async () => {
           const { mockRegisterPayload } = generateMockPayload();
           await expect(authService.register(mockRegisterPayload)).rejects.toBeInstanceOf(
             mongoose.mongo.MongoServerError,
@@ -183,7 +200,11 @@ describe('Testing auth service', () => {
       });
 
       describe('Given invalid email format', () => {
-        it('should return error is instanceOf MongoServerError and message "Email format is invalid', async () => {
+        afterEach(() => {
+          jest.clearAllMocks();
+        });
+
+        it.only('should return error is instanceOf MongoServerError and message "Email format is invalid', async () => {
           const { mockRegisterPayload } = generateMockPayload();
           const invalidEmailFormat = 'LoremIpsum';
           const mockLocalLoginPayloadInvalidEmail = { ...mockRegisterPayload, email: invalidEmailFormat };
@@ -217,7 +238,11 @@ describe('Testing auth service', () => {
     });
 
     describe('Given valid payload', () => {
-      it('should return statusCode 200 and data should contain {token, refreshToken} and message is "Refreshed token successfully"', async () => {
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it.only('should return statusCode 200 and data should contain {token, refreshToken} and message is "Refreshed token successfully"', async () => {
         const spyedRefreshCreate = jest.spyOn(RefreshTokenModel, 'create');
         const spyedRefreshDelete = jest.spyOn(RefreshTokenModel, 'deleteMany');
 
@@ -252,7 +277,11 @@ describe('Testing auth service', () => {
 
     describe('Given invalid payload', () => {
       describe('Given invalid jwt', () => {
-        it('should return error is instanceOf JsonWebTokenError', async () => {
+        afterEach(() => {
+          jest.clearAllMocks();
+        });
+
+        it.only('should return error is instanceOf JsonWebTokenError', async () => {
           return expect(authService.refreshToken('invalid_refresh_token')).rejects.toBeInstanceOf(JsonWebTokenError);
         });
       });
@@ -264,7 +293,11 @@ describe('Testing auth service', () => {
           refreshToken = signRefreshJWT(userData);
         });
 
-        it('should return error is instanceOf TokenExpiredError', async () => {
+        afterEach(() => {
+          jest.clearAllMocks();
+        });
+
+        it.only('should return error is instanceOf TokenExpiredError', async () => {
           return expect(authService.refreshToken(refreshToken.token)).rejects.toBeInstanceOf(TokenExpiredError);
         });
       });

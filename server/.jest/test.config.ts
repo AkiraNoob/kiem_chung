@@ -7,5 +7,7 @@ const jestConfigEnv = {
   JWT_EXPIRED: '300',
   REFRESH_SECRET_KEY: 'ReAdm1nfreS3c43tK3Ysh',
   REFRESH_JWT_EXPIRED: '604800',
+  SPOTIFY_CLIENT_ID: '47f3995362ad43ab997bc64b097f840e',
+  SPOTIFY_CLIENT_SECRET: '9d2940eefa814d87a3cfb0176b6509fd',
 };
 export { jestConfigEnv };
