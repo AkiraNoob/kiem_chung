@@ -28,7 +28,9 @@ jobs:
           cd ./server
           npm install
       - name: Unit Test
-        run: npm run test-dev
+        run: |
+          ls
+          npm run test-dev
       - name: Mutation Test
         run: npm run mutation-test
       - run: echo "job run successfully"
