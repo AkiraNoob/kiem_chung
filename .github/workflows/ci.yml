@@ -24,14 +24,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Dependencies
-        run: |
-          cd ./server
-          npm install
+        working-directory: ./server
+        run: npm install
       - name: Unit Test
-        run: |
-          ls
-          npm run test-dev
+        working-directory: ./server
+        run: npm run test-dev
       - name: Mutation Test
+        working-directory: ./server
         run: npm run mutation-test
       - run: echo "job run successfully"
 
@@ -42,12 +41,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Dependencies
-        run: |
-          cd ./server
-          npm install
+        working-directory: ./server
+        run: npm install
       - name: Unit Test
+        working-directory: ./server
         run: npm run test-dev
       - name: Mutation Test
+        working-directory: ./server
         run: npm run mutation-test
       - run: echo "job run successfully"
 
@@ -58,11 +58,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Dependencies
-        run: |
-          cd ./server
-          npm install
+        working-directory: ./server
+        run: npm install
       - name: Unit Test
+        working-directory: ./server
         run: npm run test-dev
       - name: Mutation Test
+        working-directory: ./server
         run: npm run mutation-test
       - run: echo "job run successfully"
