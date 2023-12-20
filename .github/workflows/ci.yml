@@ -4,9 +4,8 @@ on:
   pull_request:
     types: [opened, reopened]
   push:
-defaults:
-  run:
-    working-directory: ./server
+permissions:
+  contents: read
 env:
   PORT: 8000
   MONGODB_CONNECT_STRING: mongodb+srv://21521307_UIT:<password>@myfirstcluster.9ham1ww.mongodb.net/kiem_chung?retryWrites=true&w=majority
@@ -23,8 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        run: actions/checkout@main
+        uses: actions/checkout@v4
       - name: Install Dependencies
+        working-directory: ./server
         run: npm install
       - name: Unit Test
         run: npm run test-dev
@@ -36,7 +36,10 @@ jobs:
     name: Test (ubuntu_latest ${{ github.run_number }})
     runs-on: windows-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Install Dependencies
+        working-directory: ./server
         run: npm install
       - name: Unit Test
         run: npm run test-dev
@@ -48,7 +51,10 @@ jobs:
     name: Test (ubuntu_latest ${{ github.run_number }})
     runs-on: macos-latest-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Install Dependencies
+        working-directory: ./server
         run: npm install
       - name: Unit Test
         run: npm run test-dev
