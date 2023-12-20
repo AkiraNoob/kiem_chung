@@ -24,8 +24,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Dependencies
-        working-directory: ./server
-        run: npm install
+        run: |
+          cd ./server
+          npm install
       - name: Unit Test
         run: npm run test-dev
       - name: Mutation Test
@@ -39,8 +40,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Dependencies
-        working-directory: ./server
-        run: npm install
+        run: |
+          cd ./server
+          npm install
       - name: Unit Test
         run: npm run test-dev
       - name: Mutation Test
@@ -54,8 +56,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Dependencies
-        working-directory: ./server
-        run: npm install
+        run: |
+          cd ./server
+          npm install
       - name: Unit Test
         run: npm run test-dev
       - name: Mutation Test
