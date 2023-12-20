@@ -20,7 +20,7 @@ jobs:
   run_test:
     strategy:
       matrix:
-        version: [16, 18, 20]
+        version: [18, 20]
         os: [ubuntu-latest, windows-latest, macos-latest]
     name: Test (${{ matrix.os }}, node version v${{ matrix.version }})
     runs-on: ubuntu-latest
