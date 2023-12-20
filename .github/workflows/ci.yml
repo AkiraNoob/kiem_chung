@@ -4,6 +4,9 @@ on:
   pull_request:
     types: [opened, reopened]
   push:
+defaults:
+  run:
+    working-directory: ./server
 env:
   PORT: 8000
   MONGODB_CONNECT_STRING: mongodb+srv://21521307_UIT:<password>@myfirstcluster.9ham1ww.mongodb.net/kiem_chung?retryWrites=true&w=majority
@@ -19,6 +22,8 @@ jobs:
     name: Test (ubuntu_latest ${{ github.run_number }})
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        run: actions/checkout@main
       - name: Install Dependencies
         run: npm install
       - name: Unit Test
