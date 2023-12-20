@@ -6,7 +6,7 @@ on:
   push:
 defaults:
   run:
-    working-directory: /server
+    working-directory: server
 env:
   PORT: 8000
   MONGODB_CONNECT_STRING: mongodb+srv://21521307_UIT:<password>@myfirstcluster.9ham1ww.mongodb.net/kiem_chung?retryWrites=true&w=majority
