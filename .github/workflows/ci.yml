@@ -34,7 +34,7 @@ jobs:
       - run: echo "job run successfully"
 
   test_windows_latest:
-    name: Test (ubuntu_latest ${{ github.run_number }})
+    name: Test (windows_latest ${{ github.run_number }})
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -50,8 +50,8 @@ jobs:
       - run: echo "job run successfully"
 
   test_macOS_latest:
-    name: Test (ubuntu_latest ${{ github.run_number }})
-    runs-on: macos-latest-latest
+    name: Test (macos-latest ${{ github.run_number }})
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
